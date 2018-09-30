@@ -1,0 +1,10 @@
+version: "2"
+
+services:
+  revealjs:
+    build: .
+    volumes:
+      - "./data:/reveal.js/data"
+    ports:
+      - "8000:8000"
+      - "35729:35729"
