@@ -11,6 +11,8 @@ import (
 
 type Config struct {
 	Slides   []string               `json:"slides"`
+	Title    string                 `json:"title"`
+	Theme    string                 `json:"theme"`
 	RevealJS map[string]interface{} `json:"revealjs"`
 }
 

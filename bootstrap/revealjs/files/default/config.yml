@@ -1,6 +1,14 @@
 # Slide files paths relative to the data directory
 # Detect all supported files when empty array or null was given
 slides: []
+
+# Theme for all slides.  Following themes are available:
+# black(default), white, league, sky, beige, simple, serif, blood, night, moon, solarized
+theme: black
+
+# Title of the index.html page.
+title: reveal.js
+
 revealjs:
   # The "normal" size of the presentation, aspect ratio will be preserved
   # when the presentation is scaled to fit different resolutions
@@ -42,7 +50,7 @@ revealjs:
   showSlideNumber: 'all'
 
   # Push each slide change to the browser history
-  history: false
+  history: true
 
   # Enable keyboard shortcuts for navigation
   keyboard: true
@@ -77,7 +85,7 @@ revealjs:
 
   # Flags whether to include the current fragment in the URL
   # so that reloading brings you to the same fragment position
-  fragmentInURL: false
+  fragmentInURL: true
 
   # Flags if the presentation is running in an embedded mode
   # i.e. contained within a limited portion of the screen
@@ -192,5 +200,5 @@ revealjs:
       { src: 'plugin/markdown/markdown.js' },
       { src: 'plugin/notes/notes.js', async: true },
       { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-      { src: 'plugin/external/external.js', condition: function() {return !!document.querySelector( '[data-external],[data-external-replace]' );}},
+      { src: 'plugin/zoom-js/zoom.js', async: true }
     ]

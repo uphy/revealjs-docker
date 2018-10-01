@@ -1,6 +1,14 @@
 # Slide files paths relative to the data directory
 # Detect all supported files when empty array or null was given
 slides: []
+
+# Theme for all slides.  Following themes are available:
+# black(default), white, league, sky, beige, simple, serif, blood, night, moon, solarized
+theme: black
+
+# Title of the index.html page.
+title: reveal.js
+
 revealjs:
   # The "normal" size of the presentation, aspect ratio will be preserved
   # when the presentation is scaled to fit different resolutions

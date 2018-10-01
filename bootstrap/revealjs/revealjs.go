@@ -5,7 +5,6 @@ package revealjs
 import (
 	"errors"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"log"
 	"os"
@@ -13,7 +12,7 @@ import (
 	"path/filepath"
 	"text/template"
 
-	"github.com/GeertJohan/go.rice"
+	rice "github.com/GeertJohan/go.rice"
 )
 
 type RevealJS struct {
@@ -26,9 +25,16 @@ type RevealJS struct {
 
 const dataDirectoryName = "data"
 
+var box *rice.Box
+
 func NewRevealJS(dir string) (*RevealJS, error) {
-	if _, err := os.Stat(dir); os.IsNotExist(err) {
+	if !exist(dir) {
 		return nil, errors.New("`dir` not exist")
+	}
+	var err error
+	box, err = rice.FindBox("files")
+	if err != nil {
+		panic(err)
 	}
 	dataDirectory := filepath.Join(dir, dataDirectoryName)
 	indexTemplate := filepath.Join(dataDirectory, "index.html.tmpl")
@@ -37,8 +43,8 @@ func NewRevealJS(dir string) (*RevealJS, error) {
 
 func (r *RevealJS) reloadConfig() error {
 	configFile := filepath.Join(r.dataDirectory, "config.yml")
-	if _, err := os.Stat(configFile); os.IsNotExist(err) {
-		if err := r.generateInitialData(); err != nil {
+	if !exist(configFile) {
+		if err := Generate(FilesetNames[0], r.dataDirectory, false); err != nil {
 			return err
 		}
 	}
@@ -47,39 +53,6 @@ func (r *RevealJS) reloadConfig() error {
 		return err
 	}
 	r.config = c
-	return nil
-}
-
-func (r *RevealJS) generateInitialData() error {
-	box, err := rice.FindBox("defaults")
-	if err != nil {
-		return err
-	}
-	box.Walk("/", func(path string, info os.FileInfo, err error) error {
-		dest := filepath.Join(r.dataDirectory, path)
-		if _, err := os.Stat(dest); !os.IsNotExist(err) {
-			return nil
-		}
-		if info.IsDir() {
-			if err := os.MkdirAll(dest, 0700); err != nil {
-				return err
-			}
-		} else {
-			in, err := box.Open(path)
-			if err != nil {
-				return err
-			}
-			defer in.Close()
-			out, err := os.Create(dest)
-			if err != nil {
-				return err
-			}
-			defer out.Close()
-			_, err = io.Copy(out, in)
-			return err
-		}
-		return nil
-	})
 	return nil
 }
 
@@ -189,4 +162,15 @@ func (r *RevealJS) sectionFor(file string) string {
 
 func (r *RevealJS) UpdateSlideFile(file string) {
 	r.Reconfigure()
+}
+
+func (r *RevealJS) DataDirectory() string {
+	return r.dataDirectory
+}
+
+func exist(path string) bool {
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		return false
+	}
+	return true
 }
