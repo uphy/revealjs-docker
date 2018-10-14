@@ -23,7 +23,10 @@ type RevealJS struct {
 	EmbedSection  bool
 }
 
-const dataDirectoryName = "data"
+const (
+	dataDirectoryName = "data"
+	markdownSection   = `<section data-markdown="%s" data-separator="^\r?\n---\r?\n$" data-separator-vertical="^\r?\n~~~\r?\n$"></section>`
+)
 
 var box *rice.Box
 
@@ -144,7 +147,7 @@ func (r *RevealJS) sectionFor(file string) string {
 			}
 			return fmt.Sprintf(`%s`, string(content))
 		case ".md":
-			return fmt.Sprintf(`<section data-markdown="%s"></section>`, f)
+			return fmt.Sprintf(markdownSection, f)
 		default:
 			return ""
 		}
@@ -153,7 +156,7 @@ func (r *RevealJS) sectionFor(file string) string {
 		case ".html":
 			return fmt.Sprintf(`<section data-external="%s"></section>`, f)
 		case ".md":
-			return fmt.Sprintf(`<section data-markdown="%s"></section>`, f)
+			return fmt.Sprintf(markdownSection, f)
 		default:
 			return ""
 		}

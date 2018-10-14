@@ -22,8 +22,6 @@ COPY --from=git /checkout /reveal.js
 WORKDIR /reveal.js
 RUN npm install
 RUN sed -i -e "s/open: true/open: false/" Gruntfile.js
-#RUN mkdir -p /data && \
-#    ln -s /data /reveal.js/data
 COPY --from=gobuilder /bootstrap/bootstrap /bin/bootstrap
 ENTRYPOINT [ "/bin/bootstrap" ]
 CMD [ "start" ]
