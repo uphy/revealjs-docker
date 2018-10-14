@@ -55,11 +55,11 @@ Build presentation as static html files.
 ```console
 $ docker run --rm \
     -v "$(pwd)/data:/reveal.js/data" \
-    -v "$(pwd)/doc:/reveal.js/build" \
+    -v "$(pwd)/docs:/reveal.js/build" \
     uphy/reveal.js:3.7.0 build
 ```
 
-Files are stored in `doc` directory.  
+Files are stored in `docs` directory.  
 This is useful for hosting the presentation on GitHub Pages.
 
 ## docker-compose
@@ -77,7 +77,7 @@ services:
       - "35729:35729"
     volumes:
       - "./data:/reveal.js/data"
-      - "./doc:/reveal.js/build"
+      - "./docs:/reveal.js/build"
 ```
 
 Generate demo data.
