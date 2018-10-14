@@ -5,6 +5,8 @@ package revealjs
 import (
 	"errors"
 	"fmt"
+	"html"
+	"io"
 	"io/ioutil"
 	"log"
 	"os"
@@ -20,7 +22,8 @@ type RevealJS struct {
 	directory     string
 	dataDirectory string
 	indexTemplate string
-	EmbedSection  bool
+	EmbedHTML     bool
+	EmbedMarkdown bool
 }
 
 const (
@@ -41,7 +44,7 @@ func NewRevealJS(dir string) (*RevealJS, error) {
 	}
 	dataDirectory := filepath.Join(dir, dataDirectoryName)
 	indexTemplate := filepath.Join(dataDirectory, "index.html.tmpl")
-	return &RevealJS{nil, dir, dataDirectory, indexTemplate, true}, nil
+	return &RevealJS{nil, dir, dataDirectory, indexTemplate, true, false}, nil
 }
 
 func (r *RevealJS) reloadConfig() error {
@@ -135,31 +138,30 @@ func (r *RevealJS) generateSections() []string {
 
 func (r *RevealJS) sectionFor(file string) string {
 	f := filepath.Join(dataDirectoryName, file)
-	if r.EmbedSection {
-		path := filepath.Join(r.directory, f)
+	path := filepath.Join(r.directory, f)
 
-		switch filepath.Ext(path) {
-		case ".html":
+	switch filepath.Ext(path) {
+	case ".html":
+		if r.EmbedHTML {
 			content, err := ioutil.ReadFile(path)
 			if err != nil {
 				log.Printf("failed to load file %s: %s", path, err)
 				return ""
 			}
 			return fmt.Sprintf(`%s`, string(content))
-		case ".md":
-			return fmt.Sprintf(markdownSection, f)
-		default:
-			return ""
 		}
-	} else {
-		switch filepath.Ext(f) {
-		case ".html":
-			return fmt.Sprintf(`<section data-external="%s"></section>`, f)
-		case ".md":
-			return fmt.Sprintf(markdownSection, f)
-		default:
-			return ""
+		return fmt.Sprintf(`<section data-external="%s"></section>`, f)
+	case ".md":
+		if r.EmbedMarkdown {
+			b, err := ioutil.ReadFile(path)
+			if err != nil {
+				log.Printf("failed to read markdown file: %s", path)
+			}
+			return fmt.Sprintf(`<section data-markdown data-separator="^\r?\n---\r?\n$" data-separator-vertical="^\r?\n~~~\r?\n$">%s</section>`, html.EscapeString(string(b)))
 		}
+		return fmt.Sprintf(`<section data-markdown="%s" data-separator="^\r?\n---\r?\n$" data-separator-vertical="^\r?\n~~~\r?\n$"></section>`, f)
+	default:
+		return ""
 	}
 }
 
@@ -169,6 +171,56 @@ func (r *RevealJS) UpdateSlideFile(file string) {
 
 func (r *RevealJS) DataDirectory() string {
 	return r.dataDirectory
+}
+
+func (r *RevealJS) Build() error {
+	r.Reconfigure()
+	dst := filepath.Join(r.directory, "build")
+	// clean
+	files, err := ioutil.ReadDir(dst)
+	if err != nil {
+		return err
+	}
+	for _, f := range files {
+		if err := os.RemoveAll(filepath.Join(dst, f.Name())); err != nil {
+			return err
+		}
+	}
+	// build
+	for _, src := range []string{"css", "js", "lib", "plugin", "index.html", "data"} {
+		if err := copy(filepath.Join(r.directory, src), dst); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func copy(src, dst string) error {
+	_, srcname := filepath.Split(src)
+	return filepath.Walk(src, func(path string, info os.FileInfo, err error) error {
+		rel, err := filepath.Rel(src, path)
+		if err != nil {
+			return err
+		}
+		p := filepath.Join(dst, srcname, rel)
+		if info.IsDir() {
+			return os.MkdirAll(p, 0700)
+		}
+		reader, err := os.Open(path)
+		if err != nil {
+			return err
+		}
+		defer reader.Close()
+
+		writer, err := os.Create(p)
+		if err != nil {
+			return err
+		}
+		defer writer.Close()
+
+		_, err = io.Copy(writer, reader)
+		return err
+	})
 }
 
 func exist(path string) bool {

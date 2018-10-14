@@ -78,7 +78,9 @@ func main() {
 		cli.Command{
 			Name: "build",
 			Action: func(ctx *cli.Context) error {
-				return errors.New("not implemented yet")
+				server.EmbedHTML = true
+				server.EmbedMarkdown = true
+				return server.Build()
 			},
 		},
 	}

@@ -50,6 +50,18 @@ $ docker run --name reveal.js -d \
     uphy/reveal.js:3.7.0
 ```
 
+Build presentation as static html files.  
+
+```console
+$ docker run --rm \
+    -v "$(pwd)/data:/reveal.js/data" \
+    -v "$(pwd)/doc:/reveal.js/build" \
+    uphy/reveal.js:3.7.0 build
+```
+
+Files are stored in `doc` directory.  
+This is useful for hosting the presentation on GitHub Pages.
+
 ## docker-compose
 
 Create docker-compose.yml.
@@ -65,6 +77,7 @@ services:
       - "35729:35729"
     volumes:
       - "./data:/reveal.js/data"
+      - "./doc:/reveal.js/build"
 ```
 
 Generate demo data.
@@ -77,6 +90,12 @@ Start server.
 
 ```console
 $ docker-compose up -d
+```
+
+Build presentation as static html files.  
+
+```console
+$ docker-compose run --rm revealjs build
 ```
 
 ## Advanced
