@@ -1,4 +1,4 @@
-FROM golang:1.11 as gobuilder
+FROM golang:1.16 as gobuilder
 WORKDIR /bootstrap
 # install required commands
 RUN go get github.com/GeertJohan/go.rice/rice
@@ -17,7 +17,7 @@ RUN git clone https://github.com/hakimel/reveal.js.git . && \
     git checkout $VERSION && \
     rm -rf .git
 
-FROM node:10-alpine 
+FROM node:14-alpine
 COPY --from=git /checkout /reveal.js
 WORKDIR /reveal.js
 RUN npm install
