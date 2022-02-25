@@ -20,18 +20,7 @@ func NewDefaultConfig() *Config {
 	return &Config{
 		Slides: []string{},
 		RevealJS: map[string]interface{}{
-			"dependencies": `[
-				{ src: 'plugin/markdown/marked.js' },
-				{ src: 'plugin/markdown/markdown.js' },
-				{ src: 'plugin/notes/notes.js', async: true },
-				{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-				{ 
-					src: 'plugin/external/external.js', 
-					condition: function() { 
-						return !!document.querySelector( '[data-external],[data-external-replace]' ); 
-					} 
-				},
-			  ]`,
+			"plugins": `[ RevealMarkdown, RevealHighlight, RevealNotes ]`,
 		},
 	}
 }

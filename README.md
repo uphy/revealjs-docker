@@ -15,7 +15,7 @@ $ docker run --name reveal.js -d \
     -v "$(pwd)/data:/reveal.js/data" \
     -p "8000:8000" \
     -p "35729:35729" \
-    uphy/reveal.js:3.7.0
+    uphy/reveal.js:4.2.1
 ```
 
 Open http://localhost:8000 with your browser
@@ -37,7 +37,7 @@ $ docker run --name reveal.js -d \
     -v "$(pwd)/data:/reveal.js/data" \
     -p "8000:8000" \
     -p "35729:35729" \
-    uphy/reveal.js:3.7.0 init demo
+    uphy/reveal.js:4.2.1 init demo
 ```
 
 Start server
@@ -47,7 +47,7 @@ $ docker run --name reveal.js -d \
     -v "$(pwd)/data:/reveal.js/data" \
     -p "8000:8000" \
     -p "35729:35729" \
-    uphy/reveal.js:3.7.0
+    uphy/reveal.js:4.2.1
 ```
 
 Build presentation as static html files.  
@@ -56,7 +56,7 @@ Build presentation as static html files.
 $ docker run --rm \
     -v "$(pwd)/data:/reveal.js/data" \
     -v "$(pwd)/docs:/reveal.js/build" \
-    uphy/reveal.js:3.7.0 build
+    uphy/reveal.js:4.2.1 build
 ```
 
 Files are stored in `docs` directory.  
@@ -71,7 +71,7 @@ version: "2"
 
 services:
   revealjs:
-    image: uphy/reveal.js:3.7.0
+    image: uphy/reveal.js:4.2.1
     ports:
       - "8000:8000"
       - "35729:35729"

@@ -11,7 +11,7 @@ RUN go generate ./...
 RUN CGO_ENABLED=0 go build
 
 FROM alpine/git:latest as git
-ARG VERSION=3.7.0
+ARG VERSION=4.2.1
 WORKDIR /checkout
 RUN git clone https://github.com/hakimel/reveal.js.git . && \
     git checkout $VERSION && \
@@ -21,7 +21,7 @@ FROM node:10-alpine
 COPY --from=git /checkout /reveal.js
 WORKDIR /reveal.js
 RUN npm install
-RUN sed -i -e "s/open: true/open: false/" Gruntfile.js
+RUN sed -i -e 's/gulp serve/gulp serve --host 0.0.0.0/' package.json
 COPY --from=gobuilder /bootstrap/bootstrap /bin/bootstrap
 ENTRYPOINT [ "/bin/bootstrap" ]
 CMD [ "start" ]

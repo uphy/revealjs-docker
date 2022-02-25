@@ -193,12 +193,6 @@ revealjs:
   # The display mode that will be used to show slides
   display: 'block'
 
-  # Script dependencies to load
-  dependencies: |
-    [
-      { src: 'plugin/markdown/marked.js' },
-      { src: 'plugin/markdown/markdown.js' },
-      { src: 'plugin/notes/notes.js', async: true },
-      { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-      { src: 'plugin/zoom-js/zoom.js', async: true }
-    ]
+  # Plugins
+  # https://revealjs.com/plugins/
+  plugins: '[ RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom ]'
