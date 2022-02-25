@@ -187,7 +187,7 @@ func (r *RevealJS) Build() error {
 		}
 	}
 	// build
-	for _, src := range []string{"css", "js", "lib", "plugin", "index.html", "data"} {
+	for _, src := range []string{"dist", "plugin", "index.html", "data"} {
 		if err := copy(filepath.Join(r.directory, src), dst); err != nil {
 			return err
 		}
