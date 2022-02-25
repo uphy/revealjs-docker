@@ -33,7 +33,7 @@ Config file(`config.yml`) is located on your `data` directory.
 Generate demo data.
 
 ```console
-$ docker run --name reveal.js -d \
+$ docker run --rm reveal.js \
     -v "$(pwd)/data:/reveal.js/data" \
     -p "8000:8000" \
     -p "35729:35729" \
@@ -43,7 +43,7 @@ $ docker run --name reveal.js -d \
 Start server
 
 ```console
-$ docker run --name reveal.js -d \
+$ docker run --rm reveal.js \
     -v "$(pwd)/data:/reveal.js/data" \
     -p "8000:8000" \
     -p "35729:35729" \
