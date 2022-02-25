@@ -1,4 +1,4 @@
-FROM golang:1.11 as gobuilder
+FROM golang:1.17 as gobuilder
 WORKDIR /bootstrap
 # install required commands
 RUN go get github.com/GeertJohan/go.rice/rice
