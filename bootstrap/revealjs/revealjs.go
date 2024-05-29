@@ -1,21 +1,20 @@
 package revealjs
 
-//go:generate rice embed-go
-
 import (
+	"embed"
 	"errors"
 	"fmt"
 	"html"
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"text/template"
-
-	rice "github.com/GeertJohan/go.rice"
 )
+
+//go:embed files
+var embedFS embed.FS
 
 type RevealJS struct {
 	config        *Config
@@ -31,16 +30,9 @@ const (
 	markdownSection   = `<section data-markdown="%s" data-separator="^\r?\n---\r?\n$" data-separator-vertical="^\r?\n~~~\r?\n$"></section>`
 )
 
-var box *rice.Box
-
 func NewRevealJS(dir string) (*RevealJS, error) {
 	if !exist(dir) {
 		return nil, errors.New("`dir` not exist")
-	}
-	var err error
-	box, err = rice.FindBox("files")
-	if err != nil {
-		panic(err)
 	}
 	dataDirectory := filepath.Join(dir, dataDirectoryName)
 	indexTemplate := filepath.Join(dataDirectory, "index.html.tmpl")
@@ -91,7 +83,10 @@ func (r *RevealJS) Reconfigure() {
 }
 
 func (r *RevealJS) generateIndexHTML() error {
-	b, err := ioutil.ReadFile(r.indexTemplate)
+	b, err := os.ReadFile(r.indexTemplate)
+	if err != nil {
+		return err
+	}
 	tmpl, err := template.New("index.html.tmpl").Parse(string(b))
 	if err != nil {
 		return err
@@ -143,17 +138,17 @@ func (r *RevealJS) sectionFor(file string) string {
 	switch filepath.Ext(path) {
 	case ".html":
 		if r.EmbedHTML {
-			content, err := ioutil.ReadFile(path)
+			content, err := os.ReadFile(path)
 			if err != nil {
 				log.Printf("failed to load file %s: %s", path, err)
 				return ""
 			}
-			return fmt.Sprintf(`%s`, string(content))
+			return string(content)
 		}
 		return fmt.Sprintf(`<section data-external="%s"></section>`, f)
 	case ".md":
 		if r.EmbedMarkdown {
-			b, err := ioutil.ReadFile(path)
+			b, err := os.ReadFile(path)
 			if err != nil {
 				log.Printf("failed to read markdown file: %s", path)
 			}
@@ -175,9 +170,14 @@ func (r *RevealJS) DataDirectory() string {
 
 func (r *RevealJS) Build() error {
 	r.Reconfigure()
+
+	// Make 'build' directory if not exist
 	dst := filepath.Join(r.directory, "build")
+	if err := os.MkdirAll(dst, 0700); err != nil {
+		return err
+	}
 	// clean
-	files, err := ioutil.ReadDir(dst)
+	files, err := os.ReadDir(dst)
 	if err != nil {
 		return err
 	}
@@ -187,7 +187,7 @@ func (r *RevealJS) Build() error {
 		}
 	}
 	// build
-	for _, src := range []string{"css", "js", "lib", "plugin", "index.html", "data"} {
+	for _, src := range []string{"dist", "css", "plugin", "index.html", "data"} {
 		if err := copy(filepath.Join(r.directory, src), dst); err != nil {
 			return err
 		}

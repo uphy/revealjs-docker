@@ -6,11 +6,12 @@
 
                 <title>{{ .config.Title }}</title>
 
-                <link rel="stylesheet" href="css/reveal.css">
-                <link id="theme" rel="stylesheet" href="css/theme/{{ .config.Theme }}.css">
+                <link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/{{ .config.Theme }}.css">
 
                 <!-- Theme used for syntax highlighting of code -->
-                <link rel="stylesheet" href="lib/css/zenburn.css">
+		<link rel="stylesheet" href="plugin/highlight/monokai.css">
 
                 <!-- Printing and PDF exports -->
                 <script>
@@ -30,13 +31,21 @@
                         </div>
                 </div>
 
-                <script src="lib/js/head.min.js"></script>
-                <script src="js/reveal.js"></script>
+                <script src="dist/reveal.js"></script>
+                
+                <!-- Plugins -->
+                <!-- https://revealjs.com/plugins/#built-in-plugins -->
+                <script src="plugin/highlight/highlight.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>		
+                <script src="plugin/search/search.js"></script>
+                <script src="plugin/notes/notes.js"></script>
+                <script src="plugin/math/math.js"></script>
+                <script src="plugin/zoom/zoom.js"></script>
 
                 <script>
-                        // More info about config & dependencies:
-                        // - https://github.com/hakimel/reveal.js#configuration
-                        // - https://github.com/hakimel/reveal.js#dependencies
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
                         Reveal.initialize({
                                 {{ range $k, $v := .config.RevealJSConfig -}}
                                 {{ $k }}: {{ $v }},

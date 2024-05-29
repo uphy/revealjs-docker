@@ -1,0 +1,32 @@
+<section data-auto-animate>
+    <h2 data-id="code-title">With Animations</h2>
+    <pre data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers="|4,8-11|17|22-24"><script type="text/template">
+        import React, { useState } from 'react';
+
+        function Example() {
+          const [count, setCount] = useState(0);
+
+          return (
+            <div>
+              <p>You clicked {count} times</p>
+              <button onClick={() => setCount(count + 1)}>
+                Click me
+              </button>
+            </div>
+          );
+        }
+
+        function SecondExample() {
+          const [count, setCount] = useState(0);
+
+          return (
+            <div>
+              <p>You clicked {count} times</p>
+              <button onClick={() => setCount(count + 1)}>
+                Click me
+              </button>
+            </div>
+          );
+        }
+    </script></code></pre>
+</section>

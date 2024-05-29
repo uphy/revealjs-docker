@@ -1,28 +1,8 @@
-<section>
-    <section data-background="#dddddd">
-        <h2>Slide Backgrounds</h2>
-        <p>
-            Set <code>data-background="#dddddd"</code> on a slide to change the background color. All CSS color formats are supported.
-        </p>
-        <a href="#" class="navigate-down">
-            <img width="178" height="238" data-src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Down arrow">
-        </a>
-    </section>
-    <section data-background="https://s3.amazonaws.com/hakim-static/reveal-js/image-placeholder.png">
-        <h2>Image Backgrounds</h2>
-        <pre><code class="hljs">&lt;section data-background="image.png"&gt;</code></pre>
-    </section>
-    <section data-background="https://s3.amazonaws.com/hakim-static/reveal-js/image-placeholder.png" data-background-repeat="repeat" data-background-size="100px">
-        <h2>Tiled Backgrounds</h2>
-        <pre><code class="hljs" style="word-wrap: break-word;">&lt;section data-background="image.png" data-background-repeat="repeat" data-background-size="100px"&gt;</code></pre>
-    </section>
-    <section data-background-video="https://s3.amazonaws.com/static.slid.es/site/homepage/v1/homepage-video-editor.mp4,https://s3.amazonaws.com/static.slid.es/site/homepage/v1/homepage-video-editor.webm" data-background-color="#000000">
-        <div style="background-color: rgba(0, 0, 0, 0.9); color: #fff; padding: 20px;">
-            <h2>Video Backgrounds</h2>
-            <pre><code class="hljs" style="word-wrap: break-word;">&lt;section data-background-video="video.mp4,video.webm"&gt;</code></pre>
-        </div>
-    </section>
-    <section data-background="http://i.giphy.com/90F8aUepslB84.gif">
-        <h2>... and GIFs!</h2>
-    </section>
+<section data-auto-animate data-auto-animate-easing="cubic-bezier(0.770, 0.000, 0.175, 1.000)">
+    <div class="r-stack">
+        <div data-id="box1" style="background: cyan; width: 300px; height: 300px;"></div>
+        <div data-id="box2" style="background: magenta; width: 200px; height: 200px;"></div>
+        <div data-id="box3" style="background: yellow; width: 100px; height: 100px;"></div>
+    </div>
+    <h2 style="margin-top: 20px;">Auto-Animate</h2>
 </section>

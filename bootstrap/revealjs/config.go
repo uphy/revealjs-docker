@@ -1,10 +1,12 @@
 package revealjs
 
 import (
+	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"regexp"
+	"strings"
 
 	"github.com/ghodss/yaml"
 )
@@ -16,26 +18,6 @@ type Config struct {
 	RevealJS map[string]interface{} `json:"revealjs"`
 }
 
-func NewDefaultConfig() *Config {
-	return &Config{
-		Slides: []string{},
-		RevealJS: map[string]interface{}{
-			"dependencies": `[
-				{ src: 'plugin/markdown/marked.js' },
-				{ src: 'plugin/markdown/markdown.js' },
-				{ src: 'plugin/notes/notes.js', async: true },
-				{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-				{ 
-					src: 'plugin/external/external.js', 
-					condition: function() { 
-						return !!document.querySelector( '[data-external],[data-external-replace]' ); 
-					} 
-				},
-			  ]`,
-		},
-	}
-}
-
 func LoadConfigFile(file string) (*Config, error) {
 	f, err := os.Open(file)
 	if err != nil {
@@ -43,7 +25,7 @@ func LoadConfigFile(file string) (*Config, error) {
 	}
 	defer f.Close()
 	var c Config
-	b, err := ioutil.ReadAll(f)
+	b, err := io.ReadAll(f)
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +56,7 @@ func (c *Config) RevealJSConfig() map[string]string {
 
 func (c *Config) valueToString(k string, v interface{}) string {
 	switch k {
-	case "controlsLayout", "controlsBackArrows", "transition", "transitionSpeed", "backgroundTransition", "parallaxBackgroundImage", "parallaxBackgroundSize", "display", "showSlideNumber", "parallaxBackgroundPosition", "parallaxBackgroundRepeat":
+	case "controlsLayout", "controlsBackArrows", "transition", "transitionSpeed", "backgroundTransition", "parallaxBackgroundImage", "parallaxBackgroundSize", "display", "showSlideNumber", "parallaxBackgroundPosition", "parallaxBackgroundRepeat", "autoAnimateMatcher", "navigationMode", "preloadIframes", "autoAnimateEasing":
 		if v == nil {
 			return "null"
 		}
@@ -84,6 +66,12 @@ func (c *Config) valueToString(k string, v interface{}) string {
 			return "null"
 		}
 		return fmt.Sprint(v)
+	case "autoAnimateStyles":
+		b, _ := json.Marshal(v)
+		return string(b)
+	case "plugins":
+		b, _ := json.Marshal(v)
+		return strings.ReplaceAll(string(b), `"`, ``)
 	default:
 		return fmt.Sprint(v)
 	}
