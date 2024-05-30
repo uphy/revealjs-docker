@@ -2,3 +2,5 @@
 /reveal.js
 /data
 .DS_Store
+/example/build
+/example/data
