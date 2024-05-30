@@ -8,8 +8,8 @@ init:
 demo: init
 	@$(revealjs) init demo --overwrite
 
-.PHONY: serve
-serve: init
+.PHONY: start
+start: init
 	@$(revealjs) start
 
 .PHONY: build
